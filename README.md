@@ -20,6 +20,12 @@ His work on dynamic offset finding and Protected Process Light bypass greatly in
 - **No hard-coded offsets** — works across Windows versions and ASLR
 
 ---
+
+## Demo
+
+![PoC Demo](poc.gif)
+
+---
 ## Usage
 
 
