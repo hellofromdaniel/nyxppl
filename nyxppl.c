@@ -76,6 +76,55 @@ int FindPPOfssets(){
 
 int main(int argc, char **argv)
 {
+    const char *helpText =
+    "Usage: nyxppl.exe <PID> <ProtectionCode>\n"
+    "\n"
+    "Description:\n"
+    "  <PID>             : Process ID of the target process (e.g. lsass.exe)\n"
+    "  <ProtectionCode>  : A 1-byte hex value specifying the protection level.\n"
+    "\n"
+    "Examples:\n"
+    "  # Remove all protection\n"
+    "  nyxppl.exe 1234 0x00\n"
+    "\n"
+    "  # Protected Process Light with Antimalware signer\n"
+    "  nyxppl.exe 1234 0x31\n"
+    "\n"
+    "  # Full Protected Process with WinTcb signer\n"
+    "  nyxppl.exe 1234 0x62\n"
+    "\n"
+    "Available ProtectionCodes:\n"
+    "  0x00 - None                              | No protection\n"
+    "  0x01 - PPL, Signer=None                  | Protected Process Light, unsigned\n"
+    "  0x11 - PPL, Signer=Authenticode          | PPL for CA-signed binaries\n"
+    "  0x21 - PPL, Signer=CodeGen               | PPL for JIT/CodeGen code\n"
+    "  0x31 - PPL, Signer=Antimalware           | PPL for antimalware engines\n"
+    "  0x41 - PPL, Signer=Lsa                   | PPL for LSA (lsass.exe)\n"
+    "  0x51 - PPL, Signer=Windows               | PPL for core OS components\n"
+    "  0x61 - PPL, Signer=WinTcb                | PPL for Trusted Computing Base\n"
+    "  0x71 - PPL, Signer=WinSystem             | PPL for system-level components\n"
+    "  0x81 - PPL, Signer=App                   | PPL for UWP/Store apps\n"
+    "\n"
+    "  0x02 - Full PP, Signer=None              | Protected Process (Full), unsigned\n"
+    "  0x12 - Full PP, Signer=Authenticode      | Full PP for CA-signed binaries\n"
+    "  0x22 - Full PP, Signer=CodeGen           | Full PP for JIT/CodeGen code\n"
+    "  0x32 - Full PP, Signer=Antimalware       | Full PP for antimalware engines\n"
+    "  0x42 - Full PP, Signer=Lsa               | Full PP for LSA (lsass.exe)\n"
+    "  0x52 - Full PP, Signer=Windows           | Full PP for core OS components\n"
+    "  0x62 - Full PP, Signer=WinTcb            | Full PP for Trusted Computing Base\n"
+    "  0x72 - Full PP, Signer=WinSystem         | Full PP for system-level components\n"
+    "  0x82 - Full PP, Signer=App               | Full PP for UWP/Store apps\n"
+    "\n"
+    "Notes:\n"
+    "- Use Type=1 (low bits 001) for PPL.\n"
+    "- Use Type=2 (low bits 010) for Full PP.\n"
+    "- Signer is stored in the high nibble (bits 4–7).\n"
+    "- Audit bit (bit 3) is reserved and not currently used.\n"
+    "\n"
+    "To display this help, run without arguments:\n"
+    "  nyxppl.exe\n";
+
+    if (argc < 3) { printf("%s\n", helpText); return 1; }
 
     FindPPOfssets();
 
