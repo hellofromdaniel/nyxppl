@@ -5,6 +5,13 @@ It dynamically discovers the kernel offsets of `_PS_PROTECTION` and related fiel
 
 ---
 
+## Acknowledgments
+
+Special thanks to [itm4n](https://github.com/itm4n) for the **PPLcontrol** project and his excellent blog posts.  
+His work on dynamic offset finding and Protected Process Light bypass greatly inspired this tool.
+
+---
+
 ## Features
 
 - **Offset-finder**: scans on-disk `ntoskrnl.exe` exports (`PsIsProtectedProcess`, `PsGetProcessId`, etc.) to extract all required `_EPROCESS` offsets at runtime  
@@ -74,7 +81,9 @@ Notes
 
 To display this help from the command line, run without arguments:
 
+```cmd
 nyxppl.exe
+```
 
 ---
 
@@ -86,3 +95,32 @@ gcc nyxppl.c -lpsapi -o nyxppl.exe
 
 ```
 
+---
+
+## Install MSI Driver
+
+```cmd
+sc.exe create RTCore64 type= kernel start= auto binPath= C:\PATH\TO\RTCore64.sys DisplayName= "Micro - Star MSI Afterburner"
+net start RTCore64
+```
+
+## Silent Driver Loading with ioncodes/SilentLoad
+
+By default loading a kernel driver via `sc.exe` or `CreateService()` emits “Driver Loaded” events that can be picked up by EDR/AV or ETW. To avoid generating those alerts, you can use the **[SilentLoad](https://github.com/ioncodes/SilentLoad/tree/master)** project to load RTCore64.sys “service-less”:
+
+
+Configure main.cpp
+SilentLoad doesn't drop the driver for you. Refer to the following to lines:
+
+```c
+#define SERVICE_NAME L"RTCore64"
+#define DRIVER_PATH  L"\\??\\C:\PATH\\RTCore64.sys"
+
+```
+
+
+Verify
+
+    No “Service Installed” or “Driver Loaded” event is logged.
+
+    You can now open \\.\RTCore64 from user-mode and perform Read8/Write8 patches as usual.
