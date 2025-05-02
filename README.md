@@ -16,6 +16,64 @@ It dynamically discovers the kernel offsets of `_PS_PROTECTION` and related fiel
 ## Usage
 
 
+nyxppl.exe <PID> <ProtectionCode>
+
+
+- `<PID>`  
+  Process ID of the target process (e.g. the PID of `lsass.exe`).
+
+- `<ProtectionCode>`  
+  A one-byte hex value specifying exactly which protection level to apply.
+
+### Examples
+
+```cmd
+# Remove all protection
+nyxppl.exe 1234 0x00
+
+# Protected Process Light with Antimalware signer
+nyxppl.exe 1234 0x31
+
+# Full Protected Process with WinTcb signer
+nyxppl.exe 1234 0x62
+```
+Available ProtectionCodes
+Code	Description	Meaning
+0x00	None	No protection
+0x01	PPL, Signer=None	Protected Process Light, unsigned
+0x11	PPL, Signer=Authenticode	PPL for CA-signed binaries
+0x21	PPL, Signer=CodeGen	PPL for JIT/CodeGen code
+0x31	PPL, Signer=Antimalware	PPL for antimalware engines
+0x41	PPL, Signer=Lsa	PPL for Local Security Authority (LSASS)
+0x51	PPL, Signer=Windows	PPL for core OS components
+0x61	PPL, Signer=WinTcb	PPL for Trusted Computing Base
+0x71	PPL, Signer=WinSystem	PPL for system-level components
+0x81	PPL, Signer=App	PPL for UWP/Store applications
+0x02	Full PP, Signer=None	Full Protected Process, unsigned
+0x12	Full PP, Signer=Authenticode	Full PP for CA-signed binaries
+0x22	Full PP, Signer=CodeGen	Full PP for JIT/CodeGen code
+0x32	Full PP, Signer=Antimalware	Full PP for antimalware engines
+0x42	Full PP, Signer=Lsa	Full PP for Local Security Authority
+0x52	Full PP, Signer=Windows	Full PP for core OS components
+0x62	Full PP, Signer=WinTcb	Full PP for Trusted Computing Base
+0x72	Full PP, Signer=WinSystem	Full PP for system-level components
+0x82	Full PP, Signer=App	Full PP for UWP/Store applications
+
+Notes
+
+    Type
+
+       - Use Type=1 (low-bits 001) for PPL.
+
+       - Use Type=2 (low-bits 010) for Full PP.
+
+    Signer is stored in the high nibble (bits 4–7).
+
+    Audit bit (bit 3) is reserved and not currently used.
+
+To display this help from the command line, run without arguments:
+
+nyxppl.exe
 
 ---
 
