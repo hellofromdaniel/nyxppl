@@ -13,9 +13,17 @@ It dynamically discovers the kernel offsets of `_PS_PROTECTION` and related fiel
 - **No hard-coded offsets** — works across Windows versions and ASLR
 
 ---
+## Usage
+
+
+
+---
 
 ## Compile
 
 ```bash
 # Windows x64, using MinGW
 gcc nyxppl.c -lpsapi -o nyxppl.exe
+
+```
+
